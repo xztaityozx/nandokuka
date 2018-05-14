@@ -1,13 +1,13 @@
 package main
 
-import (
-	"fmt"
-)
-
 func hello() string {
 	return "Hello"
 }
 
+func call() int {
+	xxd()
+	return 1
+}
+
 func main() {
-	fmt.Printf(hello())
 }
