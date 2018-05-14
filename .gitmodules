@@ -1,0 +1,3 @@
+[submodule "github.com/felixge/go-xxd"]
+	path = github.com/felixge/go-xxd
+	url = git://github.com/felixge/go-xxd
