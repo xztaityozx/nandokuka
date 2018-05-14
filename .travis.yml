@@ -1,3 +1,6 @@
 language: go
+packages:
+  apt:
+    - xxd
 script:
   - go test
