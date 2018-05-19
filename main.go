@@ -1,13 +1,10 @@
+// Copyright © 2018 xztaityozx
+//
+
 package main
 
-import (
-	"fmt"
-)
-
-func hello() string {
-	return "Hello"
-}
+import "github.com/xztaityozx/nandokuka/cmd"
 
 func main() {
-	fmt.Printf(hello())
+	cmd.Execute()
 }
