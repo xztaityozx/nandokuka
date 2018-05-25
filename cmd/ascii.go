@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/mattn/go-pipeline"
 	"github.com/spf13/cobra"
@@ -43,5 +44,5 @@ func convertTo() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return string(out)
+	return fmt.Sprintf("$'%s'\n", strings.Trim(string(out), "\n"))
 }
