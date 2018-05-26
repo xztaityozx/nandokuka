@@ -26,7 +26,14 @@ var asciiCmd = &cobra.Command{
 			log.Fatal(err)
 			os.Exit(1)
 		}
-		rt := convertTo()
+		var rt string
+
+		if decodeFlag {
+			rt = convertToString()
+		} else {
+			rt = convertToASCII()
+		}
+
 		fmt.Print(rt)
 	},
 }
@@ -35,10 +42,23 @@ func init() {
 	rootCmd.AddCommand(asciiCmd)
 }
 
-func convertTo() string {
+func convertToString() string {
 	out, err := pipeline.Output(
 		[]string{"cat", TMP_PATH},
-		[]string{"xxd", "-ps"},
+		[]string{"xargs", "echo", "-e"},
+		[]string{"sed", "s/^\\$//g"},
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return string(out)
+}
+
+func convertToASCII() string {
+	out, err := pipeline.Output(
+		[]string{"xxd", "-ps", TMP_PATH},
 		[]string{"sed", "s/../\\\\x&/g"},
 	)
 	if err != nil {
