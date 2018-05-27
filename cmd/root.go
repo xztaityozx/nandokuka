@@ -70,3 +70,11 @@ func redirect(path []string) error {
 
 	return scanner.Err()
 }
+
+func surround(pattern bool, s string) string {
+	if pattern {
+		return "`" + s + "`"
+	} else {
+		return "$(" + s + ")"
+	}
+}

@@ -40,7 +40,7 @@ eval しなくても実行できるようにするにはシェル芸をパース
 		var rt string
 
 		if decodeFlag {
-			rt = convertToString()
+			rt = convertToStringFromASCII()
 		} else {
 			rt = convertToASCII()
 		}
@@ -53,7 +53,7 @@ func init() {
 	rootCmd.AddCommand(asciiCmd)
 }
 
-func convertToString() string {
+func convertToStringFromASCII() string {
 	out, err := pipeline.Output(
 		[]string{"cat", TMP_PATH},
 		[]string{"xargs", "echo", "-e"},
