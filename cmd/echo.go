@@ -21,8 +21,22 @@ import (
 // echoCmd represents the echo command
 var echoCmd = &cobra.Command{
 	Use:   "echo",
-	Short: "",
-	Long:  "",
+	Short: "一文字一文字echoする難読化をします",
+	Long: `一文字一文字echoする難読化コンバーターです
+	Usage : nandokuka [-d|--decode] echo [-v|--verbose] [-r|--random] [FILE]
+
+	[FILE]を空にするとstdinから受け取ります
+
+	ex)
+	date => $(echo d)$(echo a)$(echo t)$(echo e)
+
+一文字ずつechoして難読化します
+-rをつけるとechoの他にprintfも使うようになります
+
+この処理の途中でシングルクォートが削除されることに注意してください
+これはawkやsedを正確にエンコードするためにしています
+もう少しマシなパースができるようになったらがんばります
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var file *os.File
 		if len(args) == 0 {

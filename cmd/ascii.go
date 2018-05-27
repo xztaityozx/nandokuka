@@ -18,7 +18,7 @@ var asciiCmd = &cobra.Command{
 	Use:   "ascii",
 	Short: "ASCII難読化します",
 	Long: `ASCII難読化シェル芸コンバーター
-	Usage : nandokuka ascii [-d|--decode] [FILE]
+	Usage : nandokuka [-d|--decode] ascii [FILE]
 
 	[FILE]を空にするとstdinから受け取ります
 
