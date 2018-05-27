@@ -16,10 +16,21 @@ import (
 // asciiCmd represents the ascii command
 var asciiCmd = &cobra.Command{
 	Use:   "ascii",
-	Short: "Convert to ASCII Obfuscation",
-	Long: `Convert ShellGei to ASCII Obfuscation
+	Short: "ASCII難読化します",
+	Long: `ASCII難読化シェル芸コンバーター
+	Usage : nandokuka ascii [-d|--decode] [FILE]
+
+	[FILE]を空にするとstdinから受け取ります
+
 	ex)
-	date => $'\\x64\\x61\\x74\\x65'`,
+	date => $'\x64\x61\x74\x65'
+	
+ASCII難読化は以下みたいにワンライナーをまとめて変換します
+
+	seq 30 | awk 'NR%2==0{print}' => $'\x73\x65\x71\x20\x33\x30\x7c\x61\x77\x6b\x20\x27\x4e\x52\x25\x32\x3d\x3d\x30\x7b\x70\x72\x69\x6e\x74\x7d\x27'
+
+変換された出力を eval すれば実行できます
+eval しなくても実行できるようにするにはシェル芸をパースする必要があるので大変です`,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := redirect(args)
 		if err != nil {
