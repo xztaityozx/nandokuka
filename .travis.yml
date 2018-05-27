@@ -3,4 +3,5 @@ packages:
   apt:
     - xxd
 script:
-  - go test
+  - cd cmd
+  - go test -v

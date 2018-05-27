@@ -35,7 +35,10 @@ func Execute() {
 	}
 }
 
+var decodeFlag bool
+
 func init() {
+	rootCmd.PersistentFlags().BoolVarP(&decodeFlag, "decode", "d", false, "decode data")
 }
 
 func redirect(path []string) error {
