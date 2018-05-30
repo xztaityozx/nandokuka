@@ -5,14 +5,11 @@ package cmd
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"math/rand"
 	"os"
 	"strconv"
 	"strings"
-
-	"mvdan.cc/sh/syntax"
 
 	"github.com/mattn/go-pipeline"
 	"github.com/spf13/cobra"
@@ -48,29 +45,18 @@ var echoCmd = &cobra.Command{
 		defer file.Close()
 		s := bufio.NewScanner(file)
 
-		parser := syntax.NewParser(syntax.Variant(syntax.LangBash))
-		printer := syntax.NewPrinter()
-
 		var rt string
 		for s.Scan() {
 			line := s.Text()
 
-			prog, _ := parser.Parse(strings.NewReader(line), "")
-			syntax.Simplify(prog)
-
-			var writeBuf bytes.Buffer
-			writeBuf.Reset()
-			printer.Print(&writeBuf, prog)
-			res := string(writeBuf.Bytes())
-
 			if verbFlag {
-				fmt.Printf("shfmt : %s\n", res)
+				fmt.Printf("shfmt : %s\n", line)
 			}
 
 			if decodeFlag {
-				rt += convertToStringFromEcho(res)
+				rt += convertToStringFromEcho(line)
 			} else {
-				get := strings.Replace(res, "'", "", -1)
+				get := strings.Replace(line, "'", "", -1)
 				rt += convertToEcho(get)
 			}
 		}

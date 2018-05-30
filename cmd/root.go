@@ -5,7 +5,9 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"log"
 	"os"
+	"unsafe"
 
 	"github.com/spf13/cobra"
 )
@@ -77,4 +79,32 @@ func surround(pattern bool, s string) string {
 	} else {
 		return "$(" + s + ")"
 	}
+}
+
+func bstring(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
+}
+
+func sbyte(s string) []byte {
+	return *(*[]byte)(unsafe.Pointer(&s))
+}
+
+func readFromFile(path string, action func(string) string) string {
+	var file *os.File
+	if len(path) == 0 {
+		file = os.Stdin
+	} else {
+		var err error
+		file, err = os.Open(path)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	defer file.Close()
+	s := bufio.NewScanner(file)
+	var rt string
+	for s.Scan() {
+		rt += action(s.Text())
+	}
+	return rt
 }
