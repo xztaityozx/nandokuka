@@ -42,7 +42,7 @@ var gzipCmd = &cobra.Command{
 
 		res := readFromFile(path, func(s string) string {
 			if decodeFlag {
-				return ""
+				return gunzipCommand(s)
 			} else {
 				return gzipCommand(s)
 			}
@@ -50,6 +50,18 @@ var gzipCmd = &cobra.Command{
 
 		fmt.Println(res)
 	},
+}
+
+func gunzipCommand(s string) string {
+	out, err := pipeline.Output(
+		[]string{"echo", "-n", s},
+		[]string{"xxd", "-ps", "-r"},
+		[]string{"gunzip"},
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return bstring(out)
 }
 
 func gzipCommand(s string) string {
@@ -64,10 +76,10 @@ func gzipCommand(s string) string {
 		log.Fatal(err)
 	}
 
-	res := bstring(out)
+	res := strings.Trim(bstring(out), "\n")
 
 	if excutableFlag {
-		res = "eval $(echo -n " + strings.Trim(res, "\n") + "|xxd -ps -r|gunzip)"
+		res = "eval $(echo -n " + res + "|xxd -ps -r|gunzip)"
 	}
 
 	return res
