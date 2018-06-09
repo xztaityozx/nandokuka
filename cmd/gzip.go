@@ -32,8 +32,26 @@ import (
 // gzipCmd represents the gzip command
 var gzipCmd = &cobra.Command{
 	Use:   "gzip",
-	Short: "",
-	Long:  ``,
+	Short: "gzipを使って難読化します",
+	Long: `gzip,gunzip難読化コンバーターです
+	Usage : nandokuka [-d|--decode] gzip [-e|--excutable] [FILE]
+	
+	[FILE]を空にするとstdinから受け取ります
+
+	ex)
+	date => 1f8b080078d81b5b00034b492c4905007a379eaa04000000
+
+gzipにワンライナーを流し込み、得られた結果をxxdに通してから出力します。xxdのオプションは-psです
+
+-e|--excutableをつけると実行可能な形で出力します
+
+	ex)
+	date => eval $(echo -n 1f8b0800ded81b5b00034b492c4905007a379eaa04000000|xxd -ps -r|gunzip)
+
+-d|--decodeが有効のとき、つまりデコードするときには "eval $(echo -n" と "|xxd -ps -r|gunzip)" の部分を外してください
+
+
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		path := ""
 		if len(args) == 1 {
