@@ -22,8 +22,11 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"strconv"
 	"strings"
 
+	"github.com/mattn/go-pipeline"
 	"github.com/spf13/cobra"
 )
 
@@ -40,7 +43,7 @@ var symbolCmd = &cobra.Command{
 
 		res := readFromFile(path, func(s string) string {
 			if decodeFlag {
-				return ""
+				return decodeFromString(s)
 			} else {
 				if superFlag {
 					return encodeToSuperSymbolOnly(s)
@@ -49,7 +52,7 @@ var symbolCmd = &cobra.Command{
 				}
 			}
 		})
-		fmt.Println(strings.Trim(res, "'"))
+		fmt.Println(res)
 	},
 }
 
@@ -69,6 +72,18 @@ var numTable = map[string]string{
 var prefixCommands = map[bool]string{
 	true:  `__=$(. 2>&1);__=${__##*.};___=$(${__:$((2*2*2-1)):1}${__:1$((2*2+2*2)):1} 2>&1);___=${___##*]};____="$(${___:1$((1+2)):1}${___:2$((2*2*2-1)):1} ${___:$((2*2*2+1)):4}|${___:2$((2*2*2+1)):1}${___:2:1}${___:12:1}${___:1$((2+2)):1} -${___:1$((2*2*2-1)):1} .|${___:2$((2*2*2-1)):1}${___:1$((2*2*2-1)):2}${___:$((2*2*2-1)):1} -${___:2:1}${___:2$((2+2*2)):1}|${___:$((2*2*2-1)):1}${___:2$((2*2+2*2)):1}${__:2:2} -$((2*2+2*2))0)";____=${____%/*};${___:12:1}${____:$((2*2+2*2)):1}${___:2$((2*2+2*2)):1}${___:1$((1+2)):1} "${___:2$((2*2*2-1)):1}${___:12:1}${___:$((2*2*2-1)):1} -- {${____:$((1-1)):1}..${____:1$((1-1))$((2+2*2)):1}}";`,
 	false: "A=$(. 2>&1);A=${A##*.};${A:1$((2*2*2+1)):1}${A:$((2+2)):1}${A:1$((2*2+2*2)):1} -- {z..A};",
+}
+
+func decodeFromString(s string) string {
+	out, err := pipeline.Output(
+		[]string{"bash", "-c", fmt.Sprintf("%secho %s", prefixCommands[true], strconv.Quote(s))},
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return strings.Trim(bstring(out), "\n")
 }
 
 func encodeToSuperSymbolOnly(s string) string {
@@ -138,7 +153,7 @@ func encodeToSuperSymbolOnly(s string) string {
 		s = strings.Replace(s, key, fmt.Sprintf("%s", value), -1)
 	}
 
-	return res + s
+	return strings.Replace(res+s, "'", "", -1)
 }
 
 func encodeToSymbolOnly(s string) string {
@@ -210,7 +225,7 @@ func encodeToSymbolOnly(s string) string {
 	for key, value := range numTable {
 		s = strings.Replace(s, key, fmt.Sprintf("%s", value), -1)
 	}
-	return res + s
+	return strings.Replace(res+s, "'", "", -1)
 }
 
 var prefixFlag bool
