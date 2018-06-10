@@ -33,8 +33,27 @@ import (
 // symbolCmd represents the symbol command
 var symbolCmd = &cobra.Command{
 	Use:   "symbol",
-	Short: "",
-	Long:  ``,
+	Short: "記号オンリー難読化します",
+	Long: `記号と1,2,z,Aのみを使って難読化します。
+	Usage : nandokuka [-d|--decode] symbol [-s|--super,-p|--prefix] [FILE]
+	
+	[FILE]を空にするとstdinから受け取ります
+
+	ex)
+	date => ${@:2$((1+2)):1}${@:2$((2+2*2)):1}${@:$((2*2*2-1)):1}${@:22:1}
+
+記号と1,2,z,Aだけで難読化を行います。パラメータ展開を利用してコマンド列を表現します
+この処理の途中でシングルクォートが削除されることに気をつけてください。
+
+この難読化では先に変数に文字を展開する必要があります。-p|--prefixをつけるとこれも一緒に出力します。
+
+-s|--superをつけると超・記号オンリー難読化します。z,Aすら使わず記号と1,2だけで難読化する方法です
+
+	ex)
+	date => ${____:$((2+2))$((2+2)):1}${__:$((2+2*2)):1}${__:1$((2*2+2*2)):1}${__:$((2+2)):1}
+
+
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		path := ""
 		if len(args) == 1 {
