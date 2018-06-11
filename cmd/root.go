@@ -19,9 +19,6 @@ var rootCmd = &cobra.Command{
 	Long: `Nandokuka tool for ShellGei.
 Require:
 	- xxd`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
 }
 
 const (
